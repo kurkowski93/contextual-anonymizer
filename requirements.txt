@@ -1,0 +1,12 @@
+jupyter
+notebook
+transformers
+datasets
+torch
+pandas
+numpy
+scikit-learn
+tqdm
+python-dotenv
+openai
+pydantic
