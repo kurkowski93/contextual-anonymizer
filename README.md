@@ -20,6 +20,26 @@ A comprehensive pipeline for training and deploying text anonymization models wi
    - Batch processing capabilities
    - Performance optimization
 
+## Dataset
+
+The project includes a synthetic dataset available on Hugging Face Hub: [kurkowski/synthetic-contextual-anonymizer-dataset](https://huggingface.co/datasets/kurkowski/synthetic-contextual-anonymizer-dataset)
+
+### Dataset Structure
+- Training set: 3,456 examples
+- Validation set: 432 examples
+- Test set: 433 examples
+
+Each example contains:
+- `context`: Original text with sensitive information
+- `anonymized_context`: Text with sensitive information replaced by tags
+- `used_labels`: List of anonymization tag types used in the example
+
+### Data Generation Process
+The dataset was generated using:
+1. OpenAI GPT models for diverse document generation
+2. Custom anonymization rules
+3. Consistent tag numbering system
+
 ## Supported Document Types
 
 - Medical records
@@ -77,20 +97,60 @@ cp .env.example .env
 # Edit .env file with your OpenAI API key
 ```
 
+## Usage Examples
+
+### Loading the Dataset
+```python
+from datasets import load_dataset
+
+dataset = load_dataset("kurkowski/synthetic-contextual-anonymizer-dataset")
+```
+
+### Example Data
+```python
+# Original text
+print(dataset['train'][0]['context'])
+
+# Anonymized version
+print(dataset['train'][0]['anonymized_context'])
+```
+
 ### Data Generation
 1. Open `notebooks/synthetic_data.ipynb`
 2. Configure document types and examples count in `doc_config`
 3. Run all cells to generate synthetic training data
 4. Generated data will be saved in `data/synthetic_data.json`
 
-## Project Status
+## Development Roadmap
 
+### Phase 1 (Completed)
 - [x] Synthetic data generation pipeline
+- [x] Dataset publication on Hugging Face Hub
+- [x] Basic documentation
+
+### Phase 2 (In Progress)
 - [ ] Model training pipeline
-- [ ] Inference service
-- [ ] API documentation
-- [ ] Performance optimization
-- [ ] Production deployment guide
+- [ ] Baseline model evaluation
+- [ ] Performance metrics implementation
+
+### Phase 3 (Planned)
+- [ ] ?
+
+## Troubleshooting
+
+### Common Issues
+1. **OpenAI API Rate Limits**
+   - Solution: Implement appropriate delays between API calls
+   - Use API key with sufficient quota
+
+2. **Memory Issues During Data Generation**
+   - Solution: Reduce batch size in synthetic data generation
+   - Process data in smaller chunks
+
+3. **Environment Setup**
+   - Make sure to use Python 3.10+
+   - Check if all dependencies are correctly installed
+
 
 ## Contributing
 
@@ -103,6 +163,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## Acknowledgments
 
 - OpenAI GPT for synthetic data generation
+- Hugging Face Hub for dataset hosting
 - Contributors and maintainers
 
 ## Environment Setup

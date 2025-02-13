@@ -10,3 +10,4 @@ tqdm
 python-dotenv
 openai
 pydantic
+huggingface_hub
