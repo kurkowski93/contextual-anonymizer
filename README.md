@@ -17,9 +17,9 @@ A comprehensive pipeline for training and deploying text anonymization models wi
      - Data preprocessing
      - Model and tokenizer configuration
      - Training process with metrics monitoring
-     - Model evaluation
-     - Inference examples
-   - Optimized for efficiency and anonymization quality
+     - Comprehensive model evaluation with privacy-focused metrics
+     - Visualization of performance results
+     - Practical inference examples
 
 ## Model Training
 
@@ -43,16 +43,12 @@ A comprehensive pipeline for training and deploying text anonymization models wi
    - Learning process monitoring
    - Checkpoint saving
 
-3. **Evaluation** [to do]:
-   - Anonymization quality metrics
-   - Error analysis
-   - Test set inference examples
+3. **Evaluation**:
+   - **Entity-level metrics**: Precision, Recall, F1 for correctly anonymized data
+   - **Text similarity metrics**: BLEU and ROUGE-L to measure text structure preservation
+   - **Data privacy metrics**: Detecting and quantifying sensitive information leaks
+   - **Visualization**: Charts and summary statistics for model performance analysis
 
-
-3. **Inference Service** (coming soon)
-   - API for text anonymization
-   - Batch processing capabilities
-   - Performance optimization
 
 ## Dataset
 
@@ -155,6 +151,61 @@ print(dataset['train'][0]['anonymized_context'])
 3. Run all cells to generate synthetic training data
 4. Generated data will be saved in `data/synthetic_data.json`
 
+### Model Training and Evaluation
+1. Open `notebooks/model_training_pipeline.ipynb`
+2. Follow the complete pipeline from data loading to model evaluation
+3. The notebook includes:
+   - Data preprocessing with task-specific prompts
+   - Training configuration options
+   - Fine-tuning process
+   - Comprehensive evaluation with multiple metrics
+   - Visualization of results
+   - Practical demo of the model in action
+
+### Using the Model for Anonymization
+```python
+def generate_anonymization(text_to_anonymize, labels):
+    prompt = create_anonymization_prompt(labels)
+    inputs = tokenizer(
+        prompt + text_to_anonymize, 
+        return_tensors="pt",
+        truncation=True
+    )
+    
+    outputs = model.generate(
+        input_ids=inputs["input_ids"],
+        attention_mask=inputs["attention_mask"],
+        max_length=512,
+        temperature=0.1
+    )
+    return tokenizer.decode(outputs[0], skip_special_tokens=True)
+
+# Example usage
+sample_text = "On December 15, 2023, Jane Smith made a payment of $1,245.00 to ABC Corporation."
+entity_types = ["NAME", "DATE", "MONEY_AMOUNT", "COMPANY"]
+formatted_labels = [f"[{entity.upper()}]" for entity in entity_types]
+
+anonymized = generate_anonymization(sample_text, formatted_labels)
+print(anonymized)
+# Output: "On [DATE_1], [NAME_1] made a payment of [MONEY_AMOUNT_1] to [COMPANY_1]."
+```
+
+## Model Evaluation Metrics
+
+### Entity Recognition Metrics
+- **Precision**: Measures the accuracy of anonymized entities in the output
+- **Recall**: Measures how well the model identifies all sensitive entities
+- **F1 Score**: Harmonic mean of precision and recall
+
+### Text Similarity Metrics
+- **BLEU Score**: Evaluates how well the model preserves n-gram sequences
+- **ROUGE-L**: Measures the longest common subsequence to evaluate fluency
+
+### Privacy Protection Metrics
+- **Privacy breach detection**: Identifies if sensitive data appears in output
+- **Global privacy protection rate**: Percentage of sensitive data properly anonymized
+- **Per-entity leak analysis**: Detailed breakdown of which sensitive data types leak
+
 ## Development Roadmap
 
 ### Phase 1 (Completed)
@@ -162,13 +213,17 @@ print(dataset['train'][0]['anonymized_context'])
 - [x] Dataset publication on Hugging Face Hub
 - [x] Basic documentation
 
-### Phase 2 (In Progress)
+### Phase 2 (Completed)
 - [x] Model training pipeline
 - [x] Baseline model evaluation
-- [ ] Performance metrics implementation
+- [x] Performance metrics implementation
+- [x] Privacy-focused evaluation metrics
 
 ### Phase 3 (Planned)
-- [ ] ?
+- [ ] Inference API service
+- [ ] Web-based demo interface
+- [ ] Multi-language support
+- [ ] Domain-specific model variants
 
 ## Troubleshooting
 
