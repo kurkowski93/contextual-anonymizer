@@ -12,3 +12,4 @@ openai
 pydantic
 huggingface_hub
 transformers[torch]
+nltk
